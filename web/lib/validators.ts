@@ -106,3 +106,14 @@ export const staffUpdateSchema = z.object({
   employmentKind: z.string().optional().nullable(),
   partyMember: z.string().optional().default("unknown"),
 });
+
+export const staffCreateSchema = staffUpdateSchema.omit({ staffId: true }).extend({
+  campusId: z.string().uuid("Chọn phân hiệu"),
+});
+
+export const studentCreateSchema = studentUpdateSchema.omit({ studentId: true }).extend({
+  classId: z.string().uuid("Chọn lớp đang học"),
+  contactRelation: z.enum(["me", "cha", "khac"]).optional().nullable(),
+  contactName: z.string().trim().max(120).optional().nullable(),
+  contactPhone: z.string().trim().max(20).optional().nullable(),
+});

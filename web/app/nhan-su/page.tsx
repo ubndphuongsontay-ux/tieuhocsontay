@@ -6,7 +6,7 @@ import { EmptyState } from "@/components/ds/EmptyState";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { canEditStaff, canSeeStaff, requireAccess } from "@/lib/access";
+import { canCreateStaff, canEditStaff, canSeeStaff, requireAccess } from "@/lib/access";
 import { ageYears, employmentLabel, genderLabel } from "@/lib/format";
 import { STAFF_ISSUE_META } from "@/lib/quality";
 import { getCampusOverview, listStaffDirectory } from "@/lib/queries";
@@ -65,6 +65,13 @@ export default async function StaffPage({
       <PageHeader
         title="Giáo viên – nhân sự"
         description="Hồ sơ cán bộ, tài khoản, chủ nhiệm. Hồ sơ chưa chuẩn được cảnh báo để rà soát."
+        actions={
+          canCreateStaff(access) ? (
+            <Button asChild>
+              <Link href="/nhan-su/moi">Thêm cán bộ</Link>
+            </Button>
+          ) : null
+        }
       />
       <QualityBanner
         flagged={stats.flagged}

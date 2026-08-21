@@ -6,7 +6,7 @@ import { EmptyState } from "@/components/ds/EmptyState";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { canEditStudentRecord, classListMode, requireAccess } from "@/lib/access";
+import { canCreateStudent, canEditStudentRecord, classListMode, requireAccess } from "@/lib/access";
 import { ageYears, formatDate, genderLabel, relationLabel, supportKindLabel } from "@/lib/format";
 import { STUDENT_ISSUE_META } from "@/lib/quality";
 import { getCampusOverview, listStudentsDirectory } from "@/lib/queries";
@@ -73,6 +73,13 @@ export default async function StudentsPage({
       <PageHeader
         title="Học sinh"
         description="Hồ sơ đang học: lớp, phụ huynh, đối tượng hỗ trợ. Hồ sơ chưa chuẩn được cảnh báo để rà soát."
+        actions={
+          canCreateStudent(access) ? (
+            <Button asChild>
+              <Link href="/hoc-sinh/moi">Thêm học sinh</Link>
+            </Button>
+          ) : null
+        }
       />
       <QualityBanner
         flagged={stats.flagged}

@@ -314,6 +314,7 @@ export type ClassOption = {
   id: string;
   name: string;
   grade: number;
+  campus_id: string;
   campus_code: string;
   campus_name: string;
 };
@@ -324,6 +325,7 @@ export async function getCurrentClasses(): Promise<ClassOption[]> {
       cl.id::text,
       cl.name,
       cl.grade,
+      cl.campus_id::text as campus_id,
       camp.code as campus_code,
       camp.name as campus_name
     from classes cl

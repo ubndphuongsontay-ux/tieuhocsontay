@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canApproveTasks, canAssignTeachers, canEditAttendance, canEditStaff, canEditStudentRecord, canSeeClass, type Access } from "../lib/permissions";
+import { canApproveTasks, canAssignTeachers, canCreateStaff, canCreateStudent, canEditAttendance, canEditStaff, canEditStudentRecord, canSeeClass, classesUserCanEnroll, type Access } from "../lib/permissions";
 
 function access(
   partial: Pick<Access, "roles" | "campusIds" | "classIds" | "schoolWide">
@@ -72,5 +72,36 @@ describe("phân quyền phía server", () => {
     expect(canEditStaff(gvcn, "th")).toBe(false);
     expect(canEditStaff(pht, "pt")).toBe(true);
     expect(canEditStaff(pht, "th")).toBe(false);
+  });
+
+  it("Hiệu trưởng/PHT thêm được nhân sự; GVCN thêm học sinh lớp mình", () => {
+    const ht = access({ roles: ["principal"], schoolWide: true, campusIds: [], classIds: [] });
+    const gvcn = access({
+      roles: ["homeroom_teacher"],
+      schoolWide: false,
+      campusIds: ["th"],
+      classIds: ["lop-a"],
+    });
+    const pht = access({
+      roles: ["vice_principal"],
+      schoolWide: false,
+      campusIds: ["pt"],
+      classIds: [],
+    });
+    expect(canCreateStaff(ht)).toBe(true);
+    expect(canCreateStaff(gvcn)).toBe(false);
+    expect(canCreateStudent(gvcn)).toBe(true);
+    expect(
+      classesUserCanEnroll(gvcn, [
+        { id: "lop-a", campus_id: "th" },
+        { id: "lop-b", campus_id: "th" },
+      ]).map((c) => c.id)
+    ).toEqual(["lop-a"]);
+    expect(
+      classesUserCanEnroll(pht, [
+        { id: "lop-a", campus_id: "th" },
+        { id: "lop-c", campus_id: "pt" },
+      ]).map((c) => c.id)
+    ).toEqual(["lop-c"]);
   });
 });

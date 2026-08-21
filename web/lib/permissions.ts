@@ -132,6 +132,22 @@ export function canEditStaff(access: Access, campusId?: string | null) {
   return false;
 }
 
+export function canCreateStaff(access: Access) {
+  return canEditStaff(access);
+}
+
+export function canCreateStudent(access: Access) {
+  return canEditStudent(access);
+}
+
+export function campusesUserCanEditStaff<T extends { id: string }>(access: Access, campuses: T[]): T[] {
+  return campuses.filter((c) => canEditStaff(access, c.id));
+}
+
+export function classesUserCanEnroll<T extends { id: string; campus_id: string }>(access: Access, classes: T[]): T[] {
+  return classes.filter((c) => canEditStudentRecord(access, c.id, c.campus_id));
+}
+
 export function assert(condition: boolean, message = "Không có quyền thực hiện thao tác này") {
   if (!condition) {
     const err = new Error(message);
