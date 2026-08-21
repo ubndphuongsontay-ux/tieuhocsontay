@@ -16,25 +16,34 @@ export async function loginAction(_prev: { error?: string } | null, formData: Fo
     return { error: parsed.error.issues[0]?.message ?? "Dữ liệu không hợp lệ" };
   }
   const username = parsed.data.username;
-  const [row] = await sql<
-    { id: string; username: string; full_name: string; is_active: boolean; password_hash: string }[]
-  >`
-    select p.id::text, p.username, p.full_name, p.is_active, c.password_hash
-    from profiles p
-    join local_credentials c on c.profile_id = p.id
-    where lower(p.username) = lower(${username})
-    limit 1
-  `;
-  if (!row || !row.is_active || !verifyPassword(parsed.data.password, row.password_hash)) {
-    return { error: "Tài khoản hoặc mật khẩu không đúng" };
+  try {
+    const [row] = await sql<
+      { id: string; username: string; full_name: string; is_active: boolean; password_hash: string }[]
+    >`
+      select p.id::text, p.username, p.full_name, p.is_active, c.password_hash
+      from profiles p
+      join local_credentials c on c.profile_id = p.id
+      where lower(p.username) = lower(${username})
+      limit 1
+    `;
+    if (!row || !row.is_active || !verifyPassword(parsed.data.password, row.password_hash)) {
+      return { error: "Tài khoản hoặc mật khẩu không đúng" };
+    }
+    await setSessionCookie(newSession({ id: row.id, username: row.username, full_name: row.full_name }));
+    await writeAudit({
+      actorId: row.id,
+      action: "login",
+      entityType: "session",
+      entityId: row.id,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "";
+    if (/DATABASE_URL|ECONNREFUSED|timeout|connect/i.test(message)) {
+      return { error: "Hệ thống chưa kết nối được cơ sở dữ liệu. Liên hệ quản trị để cấu hình DATABASE_URL trên Vercel." };
+    }
+    console.error("loginAction failed", err);
+    return { error: "Không đăng nhập được vì lỗi máy chủ. Thử lại sau hoặc liên hệ quản trị." };
   }
-  await setSessionCookie(newSession({ id: row.id, username: row.username, full_name: row.full_name }));
-  await writeAudit({
-    actorId: row.id,
-    action: "login",
-    entityType: "session",
-    entityId: row.id,
-  });
   redirect("/");
 }
 

@@ -7,10 +7,13 @@ function createSql() {
   if (!url) {
     throw new Error("Thiếu DATABASE_URL — kiểm tra biến môi trường trên Vercel hoặc web/.env.local");
   }
+  const isPooled = /supabase\.(co|com)|neon\.tech|pooler/i.test(url);
   return postgres(url, {
-    max: 8,
+    max: isPooled ? 1 : 8,
     idle_timeout: 20,
     connect_timeout: 10,
+    ssl: isPooled ? true : undefined,
+    prepare: isPooled ? false : undefined,
   });
 }
 
