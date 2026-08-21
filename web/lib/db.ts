@@ -12,7 +12,8 @@ function createSql() {
     max: isPooled ? 1 : 8,
     idle_timeout: 20,
     connect_timeout: 10,
-    ssl: isPooled ? true : undefined,
+    // Vercel’s Node runtime rejects the Supabase/Neon pooler chain if we verify CA.
+    ssl: isPooled ? { rejectUnauthorized: false } : undefined,
     prepare: isPooled ? false : undefined,
   });
 }
