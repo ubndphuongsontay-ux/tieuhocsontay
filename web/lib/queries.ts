@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { sql } from "./db";
 
 export type CampusOverview = {
@@ -19,7 +20,7 @@ export type SchoolYear = {
   ends_on: string;
 };
 
-export async function getCurrentYear(): Promise<SchoolYear | null> {
+export const getCurrentYear = cache(async function getCurrentYear(): Promise<SchoolYear | null> {
   const rows = await sql<SchoolYear[]>`
     select id::text, code, starts_on::text, ends_on::text
     from school_years
@@ -27,21 +28,21 @@ export async function getCurrentYear(): Promise<SchoolYear | null> {
     limit 1
   `;
   return rows[0] ?? null;
-}
+});
 
-export async function getSchoolName(): Promise<string> {
+export const getSchoolName = cache(async function getSchoolName(): Promise<string> {
   const rows = await sql<{ name: string }[]>`select name from schools limit 1`;
   return rows[0]?.name ?? "Trường Tiểu học Sơn Tây";
-}
+});
 
-export async function getCampusNav(): Promise<{ code: string; name: string }[]> {
+export const getCampusNav = cache(async function getCampusNav(): Promise<{ code: string; name: string }[]> {
   return sql<{ code: string; name: string }[]>`
     select code, name
     from campuses
     where is_active
     order by sort_order
   `;
-}
+});
 
 export async function getCampusOverview(): Promise<CampusOverview[]> {
   return sql<CampusOverview[]>`

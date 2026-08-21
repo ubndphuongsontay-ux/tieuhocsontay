@@ -1,12 +1,9 @@
 import { AppFrame } from "@/components/layout/AppFrame";
 import { getAccess } from "@/lib/access";
-import { getCampusNav, getCurrentYear, getSchoolName } from "@/lib/queries";
+import { getCampusNav, getCurrentYear } from "@/lib/queries";
 
 export async function Shell({ children }: { children: React.ReactNode }) {
-  const access = await getAccess();
-  const school = await getSchoolName();
-  const year = await getCurrentYear();
-  const campuses = await getCampusNav();
+  const [access, year, campuses] = await Promise.all([getAccess(), getCurrentYear(), getCampusNav()]);
 
   return (
     <AppFrame
@@ -17,7 +14,7 @@ export async function Shell({ children }: { children: React.ReactNode }) {
       userUsername={access?.username ?? ""}
       userRole={access?.roles[0] ?? ""}
     >
-      <span className="sr-only">{school}</span>
+      <span className="sr-only">Trường Tiểu học Sơn Tây</span>
       {children}
     </AppFrame>
   );

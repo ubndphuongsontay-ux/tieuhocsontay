@@ -11,17 +11,13 @@ function createSql() {
   return postgres(url, {
     // Transaction pooler + serverless: one checkout per isolate. Parallel queries
     // on max>1 exhaust the pooler and hang until the 300s function timeout.
-    max: 1,
+    max: isPooled ? 2 : 4,
     idle_timeout: isPooled ? 5 : 20,
     max_lifetime: isPooled ? 60 : 0,
     connect_timeout: 8,
     fetch_types: false,
     prepare: false,
     ssl: isPooled ? { rejectUnauthorized: false } : undefined,
-    connection: {
-      application_name: "th-son-tay-web",
-      statement_timeout: 15000,
-    },
   });
 }
 
