@@ -15,7 +15,6 @@ function createSql() {
     idle_timeout: isPooled ? 5 : 20,
     max_lifetime: isPooled ? 60 : 0,
     connect_timeout: 8,
-    fetch_types: false,
     prepare: false,
     ssl: isPooled ? { rejectUnauthorized: false } : undefined,
   });
