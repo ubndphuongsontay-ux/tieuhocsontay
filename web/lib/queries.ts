@@ -437,6 +437,11 @@ export async function getAllStaff(): Promise<(StaffRow & { campus_code: string; 
 
 const emptyUuid = ["00000000-0000-0000-0000-000000000000"];
 
+function asStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) return value.filter((x): x is string => typeof x === "string");
+  return [];
+}
+
 export type StudentDirectoryRow = {
   student_id: string;
   full_name: string;
@@ -616,7 +621,7 @@ export async function listStudentsDirectory(input: {
         from student_supports sp
         where sp.student_id = v.student_id and sp.closed_on is null
       ) as support_kinds,
-      ${studentIssuesExpr()} as issues
+      to_json(${studentIssuesExpr()}) as issues
     from v_enrollments_current v
     join students s on s.id = v.student_id
     join classes c on c.id = v.class_id
@@ -649,7 +654,7 @@ export async function listStudentsDirectory(input: {
     : [];
 
   return {
-    rows: rows.map((r) => ({ ...r, issues: r.issues ?? [] })),
+    rows: rows.map((r) => ({ ...r, issues: asStringArray(r.issues) })),
     stats: {
       total: stats?.total ?? 0,
       nam: stats?.nam ?? 0,
@@ -834,7 +839,7 @@ export async function listStaffDirectory(input: {
         from staff_assignments a
         where a.staff_id = s.id and a.is_active and not a.is_homeroom
       ) as subject_count,
-      ${staffIssuesExpr()} as issues
+      to_json(${staffIssuesExpr()}) as issues
     from staff s
     join campuses c on c.id = s.campus_id
     left join profiles p on p.staff_id = s.id and p.is_active
@@ -858,7 +863,7 @@ export async function listStaffDirectory(input: {
     : [];
 
   return {
-    rows: rows.map((r) => ({ ...r, issues: r.issues ?? [] })),
+    rows: rows.map((r) => ({ ...r, issues: asStringArray(r.issues) })),
     stats: {
       total: stats?.total ?? 0,
       party: stats?.party ?? 0,
