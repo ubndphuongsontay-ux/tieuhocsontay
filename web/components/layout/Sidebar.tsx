@@ -33,7 +33,7 @@ export function Sidebar({
           collapsed && "justify-center px-2"
         )}
       >
-        <Link href="/" onClick={onNavigate} className="flex min-w-0 items-center gap-3">
+        <Link href="/" prefetch={false} onClick={onNavigate} className="flex min-w-0 items-center gap-3">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground">
             <GraduationCap className="size-5" aria-hidden />
           </span>
@@ -178,6 +178,7 @@ function NavEntry({
       ) : (
         <Link
           href={item.href ?? "/"}
+          prefetch={false}
           onClick={onNavigate}
           className={className}
           title={collapsed ? item.label : undefined}
@@ -193,6 +194,7 @@ function NavEntry({
               <Link
                 key={child.href}
                 href={child.href}
+                prefetch={false}
                 onClick={onNavigate}
                 className={cn(
                   "flex items-center justify-between rounded-md px-2 py-1.5 text-[12.5px] font-medium transition-colors duration-150",
