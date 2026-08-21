@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 const COOKIE = "st_session";
 
@@ -44,10 +45,10 @@ export function decodeSession(token: string | undefined | null): Session | null 
   }
 }
 
-export async function getSession(): Promise<Session | null> {
+export const getSession = cache(async function getSession(): Promise<Session | null> {
   const jar = await cookies();
   return decodeSession(jar.get(COOKIE)?.value);
-}
+});
 
 export async function setSessionCookie(session: Session) {
   const jar = await cookies();

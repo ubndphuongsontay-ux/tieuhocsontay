@@ -52,19 +52,25 @@ export async function getCampusOverview(): Promise<CampusOverview[]> {
       c.former_name,
       c.class_letter,
       c.sort_order,
-      (select count(*)::int from staff s where s.campus_id = c.id) as staff_count,
-      (
-        select count(*)::int
-        from classes cl
-        join school_years y on y.id = cl.school_year_id
-        where cl.campus_id = c.id and y.is_current
-      ) as class_count,
-      (
-        select count(*)::int
-        from v_enrollments_current v
-        where v.campus_code = c.code
-      ) as student_count
+      coalesce(st.n, 0)::int as staff_count,
+      coalesce(cl.n, 0)::int as class_count,
+      coalesce(en.n, 0)::int as student_count
     from campuses c
+    left join (
+      select campus_id, count(*)::int as n from staff group by campus_id
+    ) st on st.campus_id = c.id
+    left join (
+      select cl.campus_id, count(*)::int as n
+      from classes cl
+      join school_years y on y.id = cl.school_year_id
+      where y.is_current
+      group by cl.campus_id
+    ) cl on cl.campus_id = c.id
+    left join (
+      select campus_code, count(*)::int as n
+      from v_enrollments_current
+      group by campus_code
+    ) en on en.campus_code = c.code
     order by c.sort_order
   `;
 }

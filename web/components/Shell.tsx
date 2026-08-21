@@ -4,11 +4,9 @@ import { getCampusNav, getCurrentYear, getSchoolName } from "@/lib/queries";
 
 export async function Shell({ children }: { children: React.ReactNode }) {
   const access = await getAccess();
-  const [school, year, campuses] = await Promise.all([
-    getSchoolName(),
-    getCurrentYear(),
-    getCampusNav(),
-  ]);
+  const school = await getSchoolName();
+  const year = await getCurrentYear();
+  const campuses = await getCampusNav();
 
   return (
     <AppFrame

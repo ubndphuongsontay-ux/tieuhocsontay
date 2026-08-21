@@ -10,11 +10,11 @@ import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { requireAccess } from "@/lib/access";
 import { getDashboardData } from "@/lib/dashboard";
-import { getCurrentYear } from "@/lib/queries";
 
 export default async function HomePage() {
   const access = await requireAccess();
-  const [data, year] = await Promise.all([getDashboardData(access), getCurrentYear()]);
+  const data = await getDashboardData(access);
+  const year = data.year;
 
   return (
     <>

@@ -9,13 +9,19 @@ function createSql() {
   }
   const isPooled = /supabase\.(co|com)|neon\.tech|pooler/i.test(url);
   return postgres(url, {
-    // Transaction pooler: a few parallel queries per request, not one (that serializes and 504s).
-    max: isPooled ? 4 : 8,
-    idle_timeout: 20,
-    connect_timeout: 5,
-    // Vercel’s Node runtime rejects the Supabase/Neon pooler chain if we verify CA.
+    // Transaction pooler + serverless: one checkout per isolate. Parallel queries
+    // on max>1 exhaust the pooler and hang until the 300s function timeout.
+    max: 1,
+    idle_timeout: isPooled ? 5 : 20,
+    max_lifetime: isPooled ? 60 : 0,
+    connect_timeout: 8,
+    fetch_types: false,
+    prepare: false,
     ssl: isPooled ? { rejectUnauthorized: false } : undefined,
-    prepare: isPooled ? false : undefined,
+    connection: {
+      application_name: "th-son-tay-web",
+      statement_timeout: 15000,
+    },
   });
 }
 
