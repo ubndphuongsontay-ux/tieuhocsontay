@@ -1,0 +1,15 @@
+export const CLASS_SUBJECTS = [
+  "Tiếng Việt",
+  "Toán",
+  "Tiếng Anh",
+  "Tự nhiên và Xã hội",
+  "Khoa học",
+  "Lịch sử và Địa lý",
+  "Tin học",
+  "Công nghệ",
+  "Giáo dục thể chất",
+  "Âm nhạc",
+  "Mỹ thuật",
+  "Hoạt động trải nghiệm",
+  "Giáo dục địa phương",
+] as const;
