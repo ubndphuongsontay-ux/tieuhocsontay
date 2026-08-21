@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/ds/EmptyState";
 import { canEditAttendance, classListMode, requireAccess } from "@/lib/access";
 import { sql } from "@/lib/db";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 
 export default async function AttendanceIndexPage() {
   const access = await requireAccess();

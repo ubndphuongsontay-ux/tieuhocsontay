@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ClassTeachersPanel } from "@/components/class/ClassTeachersPanel";
 import { OrgScopeFilters } from "@/components/class/OrgScopeFilters";
 import { EmptyState } from "@/components/ds/EmptyState";

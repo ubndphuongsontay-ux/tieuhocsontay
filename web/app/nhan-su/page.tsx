@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Avatar } from "@/components/Avatar";
 import { IssuePills, QualityBanner } from "@/components/directory/QualityBanner";
 import { Pager, StatStrip } from "@/components/directory/Pager";

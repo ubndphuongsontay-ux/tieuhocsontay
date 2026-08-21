@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/ds/EmptyState";

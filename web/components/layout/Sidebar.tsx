@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown, ChevronsLeft, GraduationCap } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { schoolNav, type NavItem } from "@/lib/nav";

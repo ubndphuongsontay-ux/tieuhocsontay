@@ -3,6 +3,7 @@
 import { Bell, ChevronDown, Menu, Search } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import Link from "@/components/AppLink";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -157,12 +158,12 @@ export function TopHeader({
                 <ul className="max-h-72 overflow-auto py-1">
                   {alerts.map((a) => (
                     <li key={a.id}>
-                      <a href={a.href ?? "/"} className="block px-3 py-2 text-sm transition-colors duration-150 hover:bg-accent">
+                      <Link href={a.href ?? "/"} className="block px-3 py-2 text-sm transition-colors duration-150 hover:bg-accent">
                         <span className="font-semibold">{a.title}</span>
                         <span className="mt-0.5 block text-[12.5px] leading-relaxed text-muted-foreground">
                           {a.detail}
                         </span>
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

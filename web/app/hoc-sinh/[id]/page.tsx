@@ -1,3 +1,4 @@
+import Link from "@/components/AppLink";
 import { notFound } from "next/navigation";
 import { PageHeader, Panel } from "@/components/PageHeader";
 import { StudentContactForm, StudentEditForm } from "@/components/records/StudentEditForm";
@@ -58,9 +59,9 @@ export default async function StudentPage({
           student.class_name ? (
             <>
               {student.campus_name} ·{" "}
-              <a href={`/lop/${student.class_id}`} className="font-semibold text-foreground hover:text-primary">
+              <Link href={`/lop/${student.class_id}`} className="font-semibold text-foreground hover:text-primary">
                 Lớp {student.class_name}
-              </a>
+              </Link>
             </>
           ) : (
             "Chưa có chỗ học đang mở"

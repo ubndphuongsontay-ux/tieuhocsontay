@@ -1,4 +1,5 @@
 import { Avatar } from "@/components/Avatar";
+import Link from "@/components/AppLink";
 import { EmptyState } from "@/components/ds/EmptyState";
 import { PageHeader, Panel, SectionTitle } from "@/components/PageHeader";
 import { genderLabel } from "@/lib/format";
@@ -81,7 +82,7 @@ export default async function CampusPage({
                 <p className="mb-2 text-[13px] font-semibold text-muted-foreground">Khối {grade}</p>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
                   {list.map((cl) => (
-                    <a
+                    <Link
                       key={cl.id}
                       href={`/lop/${cl.id}`}
                       className="flex items-baseline justify-between rounded-[12px] border border-border bg-card px-4 py-3 shadow-[var(--shadow-card)] transition duration-150 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
@@ -90,7 +91,7 @@ export default async function CampusPage({
                       <span className="text-[13px] font-medium tabular-nums text-muted-foreground">
                         {cl.enrollment_count}
                       </span>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -123,9 +124,9 @@ export default async function CampusPage({
                       <td>
                         <div className="flex items-center gap-3">
                           <Avatar name={s.full_name} size="sm" />
-                          <a href={`/nhan-su/${s.id}`} className="font-semibold hover:text-primary">
+                          <Link href={`/nhan-su/${s.id}`} className="font-semibold hover:text-primary">
                             {s.full_name}
-                          </a>
+                          </Link>
                         </div>
                       </td>
                       <td className="text-muted-foreground">{genderLabel(s.gender)}</td>

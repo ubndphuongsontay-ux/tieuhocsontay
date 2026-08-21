@@ -7,6 +7,7 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
+import Link from "@/components/AppLink";
 import { EmptyState } from "@/components/ds/EmptyState";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -76,9 +77,9 @@ export function KpiCard({
 
   if (href) {
     return (
-      <a href={href} className={className}>
+      <Link href={href} className={className}>
         {inner}
-      </a>
+      </Link>
     );
   }
   return <article className={className}>{inner}</article>;
@@ -135,9 +136,9 @@ export function AlertBoard({ alerts }: { alerts: DashboardAlert[] }) {
             </div>
           );
           return a.href ? (
-            <a key={a.id} href={a.href} className="block hover:opacity-90">
+            <Link key={a.id} href={a.href} className="block hover:opacity-90">
               {body}
-            </a>
+            </Link>
           ) : (
             <div key={a.id}>{body}</div>
           );
@@ -289,10 +290,10 @@ export function CampusBoard({
                     </TableCell>
                     <TableCell className="pr-4 text-right">
                       <Button variant="ghost" size="sm" asChild>
-                        <a href={`/phan-hieu/${c.code}`} className="gap-1">
+                        <Link href={`/phan-hieu/${c.code}`} className="gap-1">
                           Xem chi tiết
                           <ArrowRight className="size-3.5" />
-                        </a>
+                        </Link>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -356,7 +357,7 @@ function CampusMobileCard({
         </dl>
       )}
       <Button variant="outline" size="sm" className="mt-3" asChild>
-        <a href={`/phan-hieu/${c.code}`}>Xem chi tiết</a>
+        <Link href={`/phan-hieu/${c.code}`}>Xem chi tiết</Link>
       </Button>
     </article>
   );
@@ -379,7 +380,7 @@ export function WorkQueue({ recent }: { recent: DashboardData["recent"] }) {
           <ul className="divide-y divide-border">
             {recent.map((e) => (
               <li key={e.id}>
-                <a
+                <Link
                   href={e.href}
                   className="flex items-center justify-between gap-3 py-2.5 transition-colors duration-150 hover:text-primary"
                 >
@@ -388,7 +389,7 @@ export function WorkQueue({ recent }: { recent: DashboardData["recent"] }) {
                     <span className="text-[12.5px] text-muted-foreground">{e.meta}</span>
                   </span>
                   <ArrowRight className="size-4 shrink-0 text-muted-foreground" />
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

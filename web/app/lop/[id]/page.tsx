@@ -6,7 +6,7 @@ import { sql } from "@/lib/db";
 import { formatDate, genderLabel } from "@/lib/format";
 import { getClassDetail, getClassRoster, getCurrentHomerooms } from "@/lib/queries";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 
 export default async function ClassPage({
   params,

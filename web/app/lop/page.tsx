@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { OrgScopeFilters } from "@/components/class/OrgScopeFilters";
 import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/ds/EmptyState";
