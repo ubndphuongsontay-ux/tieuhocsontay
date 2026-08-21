@@ -467,7 +467,7 @@ const studentIssueWhere = (issue: string | null) => sql`
     or (${issue} = 'invalid_contact_phone' and ct.phone is not null and trim(ct.phone) <> '' and ct.phone !~ '^0[0-9]{9}$'))
 `;
 
-const studentIssuesExpr = sql`
+const studentIssuesExpr = () => sql`
   array_remove(array[
     case when v.dob is null then 'missing_dob' end,
     case when v.gender is null then 'missing_gender' end,
@@ -548,7 +548,7 @@ export async function listStudentsDirectory(input: {
           where sp.student_id = v.student_id and sp.closed_on is null and sp.kind = 'chinh_sach'
         ) and ${studentIssueWhere(input.issue)}
       )::int as chinh_sach,
-      count(*) filter (where cardinality(${studentIssuesExpr}) > 0)::int as flagged,
+      count(*) filter (where cardinality(${studentIssuesExpr()}) > 0)::int as flagged,
       count(*) filter (where v.dob is null)::int as missing_dob,
       count(*) filter (where v.gender is null)::int as missing_gender,
       count(*) filter (where coalesce(trim(v.ethnicity), '') = '')::int as missing_ethnicity,
@@ -598,7 +598,7 @@ export async function listStudentsDirectory(input: {
         from student_supports sp
         where sp.student_id = v.student_id and sp.closed_on is null
       ) as support_kinds,
-      ${studentIssuesExpr} as issues
+      ${studentIssuesExpr()} as issues
     from v_enrollments_current v
     join students s on s.id = v.student_id
     join classes c on c.id = v.class_id
@@ -611,7 +611,7 @@ export async function listStudentsDirectory(input: {
       limit 1
     ) ct on true
     where ${where}
-    order by (cardinality(${studentIssuesExpr}) > 0) desc, v.campus_name, v.grade, v.class_name, v.full_name
+    order by (cardinality(${studentIssuesExpr()}) > 0) desc, v.campus_name, v.grade, v.class_name, v.full_name
     limit ${input.limit} offset ${input.offset}
   `;
 
@@ -689,7 +689,7 @@ const staffIssueWhere = (issue: string | null) => sql`
     or (${issue} = 'odd_age' and s.dob is not null and (extract(year from age(s.dob::timestamp)) < 20 or extract(year from age(s.dob::timestamp)) > 70)))
 `;
 
-const staffIssuesExpr = sql`
+const staffIssuesExpr = () => sql`
   array_remove(array[
     case when s.gender is null then 'missing_gender' end,
     case when coalesce(s.national_id, '') = '' then 'missing_cccd' end,
@@ -769,7 +769,7 @@ export async function listStaffDirectory(input: {
           where cl.homeroom_staff_id = s.id and y.is_current
         ) and ${staffIssueWhere(input.issue)}
       )::int as homeroom,
-      count(*) filter (where cardinality(${staffIssuesExpr}) > 0)::int as flagged,
+      count(*) filter (where cardinality(${staffIssuesExpr()}) > 0)::int as flagged,
       count(*) filter (where s.gender is null)::int as missing_gender,
       count(*) filter (where coalesce(s.national_id, '') = '')::int as missing_cccd,
       count(*) filter (where s.national_id is not null and s.national_id !~ '^[0-9]{9}$' and s.national_id !~ '^[0-9]{12}$')::int as invalid_cccd,
@@ -816,12 +816,12 @@ export async function listStaffDirectory(input: {
         from staff_assignments a
         where a.staff_id = s.id and a.is_active and not a.is_homeroom
       ) as subject_count,
-      ${staffIssuesExpr} as issues
+      ${staffIssuesExpr()} as issues
     from staff s
     join campuses c on c.id = s.campus_id
     left join profiles p on p.staff_id = s.id and p.is_active
     where ${where}
-    order by (cardinality(${staffIssuesExpr}) > 0) desc, c.sort_order, s.full_name
+    order by (cardinality(${staffIssuesExpr()}) > 0) desc, c.sort_order, s.full_name
     limit ${input.limit} offset ${input.offset}
   `;
 
