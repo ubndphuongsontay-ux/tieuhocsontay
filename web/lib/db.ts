@@ -3,7 +3,7 @@ import postgres from "postgres";
 const globalForSql = globalThis as unknown as { sql?: ReturnType<typeof postgres> };
 
 function createSql() {
-  const url = process.env.DATABASE_URL;
+  const url = process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL;
   if (!url) {
     throw new Error("Thiếu DATABASE_URL — kiểm tra biến môi trường trên Vercel hoặc web/.env.local");
   }
