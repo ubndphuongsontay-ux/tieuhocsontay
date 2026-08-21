@@ -34,6 +34,15 @@ export async function getSchoolName(): Promise<string> {
   return rows[0]?.name ?? "Trường Tiểu học Sơn Tây";
 }
 
+export async function getCampusNav(): Promise<{ code: string; name: string }[]> {
+  return sql<{ code: string; name: string }[]>`
+    select code, name
+    from campuses
+    where is_active
+    order by sort_order
+  `;
+}
+
 export async function getCampusOverview(): Promise<CampusOverview[]> {
   return sql<CampusOverview[]>`
     select

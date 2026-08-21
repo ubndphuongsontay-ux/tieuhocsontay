@@ -9,8 +9,12 @@ export function proxy(req: NextRequest) {
   ) {
     return NextResponse.next();
   }
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-pathname", pathname);
+  const next = () => NextResponse.next({ request: { headers: requestHeaders } });
+
   if (pathname === "/login" || pathname === "/logout") {
-    return NextResponse.next();
+    return next();
   }
   const session = req.cookies.get("st_session")?.value;
   if (!session) {
@@ -19,7 +23,7 @@ export function proxy(req: NextRequest) {
     url.search = "";
     return NextResponse.redirect(url);
   }
-  return NextResponse.next();
+  return next();
 }
 
 export const config = {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
+import { headers } from "next/headers";
 import { Shell } from "@/components/Shell";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -25,11 +26,14 @@ export const dynamic = "force-dynamic";
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const session = await getSession();
+  const pathname = (await headers()).get("x-pathname") ?? "";
+  const publicPage = pathname === "/login" || pathname === "/logout";
+  const useShell = Boolean(session) && !publicPage;
   return (
     <html lang="vi" className={cn(sans.variable, "h-full antialiased")}>
       <body className="min-h-full font-sans">
         <TooltipProvider>
-          {session ? <Shell>{children}</Shell> : children}
+          {useShell ? <Shell>{children}</Shell> : children}
           <Toaster />
         </TooltipProvider>
       </body>
